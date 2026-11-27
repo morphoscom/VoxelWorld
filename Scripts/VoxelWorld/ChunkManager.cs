@@ -204,7 +204,7 @@ public partial class ChunkManager : Node3D
     {
         foreach (Vector3I coordinates in _chunksToReBuild)
         {
-            if (_chunks.TryGetValue(coordinates, out Chunk chunk))
+            if (!_chunks.TryGetValue(coordinates, out Chunk chunk))
                 return;
             
             RebuildChunkMesh(chunk);
