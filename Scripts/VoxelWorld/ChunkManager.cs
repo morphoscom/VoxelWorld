@@ -6,13 +6,12 @@ public partial class ChunkManager : Node3D
 {
     [Export]
     public ChunkGenerator chunkGenerator {get;set;}
-
     [Export(PropertyHint.Range, "0,16,1")]
     public int LoadRadius {get;set;} = 2;
     public int LoadedChunkCount => _chunks.Count;
-    public Vector3I ViewerChunkCoordinates {get; private set;}
-    public bool HasViewer {get; private set;}
 
+    private Vector3I _viewerChunkCoordinates {get;set;}
+    private bool _hasViewer {get;set;}
     private readonly List<Vector3I> _chunksToRemove = new();
     private readonly Dictionary<Vector3I,Chunk> _chunks = new();
     private readonly Dictionary<Vector3I, MeshInstance3D> _chunkMeshes = new();
@@ -31,11 +30,11 @@ public partial class ChunkManager : Node3D
 
     public void UpdateViewerChunk(Vector3I coordinates)
     {
-        if (HasViewer && ViewerChunkCoordinates == coordinates)
+        if (_hasViewer && _viewerChunkCoordinates == coordinates)
             return;
 
-        ViewerChunkCoordinates = coordinates;
-        HasViewer = true;
+        _viewerChunkCoordinates = coordinates;
+        _hasViewer = true;
 
         GD.Print($"Viewer entered chunk: {coordinates}");
 
@@ -59,12 +58,17 @@ public partial class ChunkManager : Node3D
 
     public bool RemoveChunk(Vector3I coordinates)
     {
-        return _chunks.Remove(coordinates);
+        if (!_chunks.Remove(coordinates))
+            return false;
+
+        RemoveChunkMesh(coordinates);
+        QueueChunkAndNeighbors(coordinates);
+        return true;
     }
 
     private void UpdateLoadedChunk()
     {
-        int radius = Math.Max(0,LoadRadius);
+        int radius = Math.Max(0,LoadRadius); //защита от минуса
 
         _chunksToReBuild.Clear();
 
@@ -82,7 +86,7 @@ public partial class ChunkManager : Node3D
 
         foreach(Vector3I coordinates in _chunks.Keys)
         {
-            Vector3I offSet = coordinates - ViewerChunkCoordinates;
+            Vector3I offSet = coordinates - _viewerChunkCoordinates;
 
             if (Math.Abs(offSet.X) > radius ||
                 Math.Abs(offSet.Y) > radius ||
@@ -110,7 +114,7 @@ public partial class ChunkManager : Node3D
             {
                 for (int z = -radius; z <= radius; z++)
                 {
-                    Vector3I coordinates = new Vector3I(x,y,z) + ViewerChunkCoordinates;
+                    Vector3I coordinates = new Vector3I(x,y,z) + _viewerChunkCoordinates;
 
                     if (!_chunks.ContainsKey(coordinates))
                     {
@@ -205,7 +209,7 @@ public partial class ChunkManager : Node3D
         foreach (Vector3I coordinates in _chunksToReBuild)
         {
             if (!_chunks.TryGetValue(coordinates, out Chunk chunk))
-                return;
+                continue;
             
             RebuildChunkMesh(chunk);
         }

@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public partial class ChunkMesher : Node
+public partial class ChunkMesher
 {
     private readonly struct Face
     {
