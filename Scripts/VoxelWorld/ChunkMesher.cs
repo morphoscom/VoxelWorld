@@ -1,6 +1,7 @@
 using Godot;
 using System;
 
+namespace VoxelWorld;
 public partial class ChunkMesher
 {
     private readonly struct Face

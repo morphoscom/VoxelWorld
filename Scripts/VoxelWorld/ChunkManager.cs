@@ -2,6 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
+namespace VoxelWorld;
 public partial class ChunkManager : Node3D
 {
     [Export]
@@ -232,7 +233,7 @@ public partial class ChunkManager : Node3D
             if (!_chunks.TryGetValue(coordinates, out Chunk chunk))
                 continue;
 
-            if (chunk.state != ChunkState.Generating ||
+            if (chunk.state != ChunkState.Generating &&
                 chunk.state != ChunkState.Ready)
                 continue;
 

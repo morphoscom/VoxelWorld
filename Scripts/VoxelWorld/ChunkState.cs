@@ -1,3 +1,4 @@
+namespace VoxelWorld;
 public enum ChunkState
 {
     QueuedForGeneration,

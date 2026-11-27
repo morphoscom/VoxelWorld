@@ -2,6 +2,7 @@ using Godot;
 using System;
 using System.Threading;
 
+namespace VoxelWorld;
 public sealed class ChunkGenerationTask
 {
     private readonly Chunk _chunk;

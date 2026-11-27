@@ -1,6 +1,7 @@
 using Godot;
 using System;
 
+namespace VoxelWorld;
 public partial class WorldViewer : Node3D
 {
     [Export]

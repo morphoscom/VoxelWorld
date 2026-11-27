@@ -1,6 +1,7 @@
 using Godot;
 using System;
 
+namespace VoxelWorld;
 public sealed class Chunk
 {
     public ChunkState state {get; private set;} = ChunkState.QueuedForGeneration;

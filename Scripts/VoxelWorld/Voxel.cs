@@ -1,6 +1,6 @@
 using Godot;
 using System;
-
+namespace VoxelWorld;
 public readonly struct Voxel
 {
     public VoxelType Type {get;} = 0;

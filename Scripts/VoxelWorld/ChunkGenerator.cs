@@ -1,6 +1,8 @@
 using Godot;
 using System;
 
+namespace VoxelWorld;
+
 [GlobalClass]
 public partial class ChunkGenerator : Resource
 {
