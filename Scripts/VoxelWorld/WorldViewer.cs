@@ -32,7 +32,7 @@ public partial class WorldViewer : Node3D
 
     private void UpdateChunkCoordinates()
     {
-        Vector3 localPosition = ChunkManager.ToLocal(camera3D.GetParentNode3D().GlobalPosition);
+        Vector3 localPosition = ChunkManager.ToLocal(camera3D.Position);
 
         Vector3I chunkCoordinates = new(Mathf.FloorToInt(localPosition.X / Chunk.SIZE),
                                         Mathf.FloorToInt(localPosition.Y / Chunk.SIZE),
