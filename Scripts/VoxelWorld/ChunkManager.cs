@@ -66,6 +66,8 @@ public partial class ChunkManager : Node3D
         return true;
     }
 
+
+    // Главный метод этого класса!!
     private void UpdateLoadedChunk()
     {
         int radius = Math.Max(0,LoadRadius); //защита от минуса
@@ -118,13 +120,27 @@ public partial class ChunkManager : Node3D
 
                     if (!_chunks.ContainsKey(coordinates))
                     {
-                        //AddChunk(new Chunk(coordinates));
-
                         Chunk chunk = new(coordinates);
-                        chunkGenerator.Generate(chunk);
                         AddChunk(chunk);
+                        
+                        chunk.ChangeState(ChunkState.Generating); // в очереди на генерацию -> генерация данных
 
-                        QueueChunkAndNeighbors(coordinates);
+                        try
+                        {
+                            chunkGenerator.Generate(chunk);
+                            
+                            chunk.ChangeState(ChunkState.Generated); // генерация данных -> данные сгенерированы
+                            
+                            QueueChunkAndNeighbors(coordinates);
+                        }
+                        catch (Exception exception)
+                        {
+                            chunk.ChangeState(ChunkState.Failed); // состояние ошибка
+
+                            _chunks.Remove(coordinates);
+
+                            GD.PushError($"Chunk generation failed at {coordinates}: {exception}");
+                        }
                     }
                 } 
             }   
@@ -142,6 +158,11 @@ public partial class ChunkManager : Node3D
         if (!_chunks.TryGetValue(chunkCoordinates, out Chunk chunk))
             return new Voxel(VoxelType.Air);
         
+        if (chunk.state == ChunkState.QueuedForGeneration ||
+            chunk.state == ChunkState.Generating ||
+            chunk.state == ChunkState.Failed)
+            return new Voxel(VoxelType.Air);
+
         Vector3I chunkOrigin = chunkCoordinates * Chunk.SIZE;
 
         Vector3I localPosition = worldPosition - chunkOrigin;
@@ -210,8 +231,25 @@ public partial class ChunkManager : Node3D
         {
             if (!_chunks.TryGetValue(coordinates, out Chunk chunk))
                 continue;
-            
-            RebuildChunkMesh(chunk);
+
+            if (chunk.state != ChunkState.Generating ||
+                chunk.state != ChunkState.Ready)
+                continue;
+
+            chunk.ChangeState(ChunkState.Meshing);
+
+            try
+            {
+                RebuildChunkMesh(chunk);
+
+                chunk.ChangeState(ChunkState.Ready);
+            }
+            catch (Exception exception)
+            {
+                chunk.ChangeState(ChunkState.Failed);
+
+                GD.PushError($"Chunk meshing failed at {coordinates}: {exception}");
+            }
         }
 
         _chunksToReBuild.Clear();
