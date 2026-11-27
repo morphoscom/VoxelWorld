@@ -27,9 +27,9 @@ public sealed class Chunk
 
     private static int GetIndex(Vector3I position)
     {
-        if (position.X < 0 || position.X > SIZE &&
-            position.Y < 0 || position.Y > SIZE &&
-            position.Z < 0 || position.Z > SIZE)
+        if (position.X < 0 || position.X >= SIZE ||
+            position.Y < 0 || position.Y >= SIZE ||
+            position.Z < 0 || position.Z >= SIZE)
         {
             throw new ArgumentOutOfRangeException(nameof(position),"Voxel position is outside chunk boudaries.");
         }
