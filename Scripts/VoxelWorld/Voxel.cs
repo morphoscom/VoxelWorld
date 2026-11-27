@@ -3,9 +3,9 @@ using System;
 
 public readonly struct Voxel
 {
-    public short Type {get;} = 0;
-    public bool IsEmpty => Type == 0;
-    public Voxel(short type)
+    public VoxelType Type {get;} = 0;
+    public bool IsEmpty => Type == VoxelType.Air;
+    public Voxel(VoxelType type)
     {
         Type = type;
     }
