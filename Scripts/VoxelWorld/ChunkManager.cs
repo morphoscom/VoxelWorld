@@ -83,11 +83,11 @@ public partial class ChunkManager : Node3D
 
     private void LoadChunkIsRange(int radius)
     {
-        for (int x = -radius; x < radius; x++)
+        for (int x = -radius; x <= radius; x++)
         {
-            for (int y = -radius; y < radius; y++)
+            for (int y = -radius; y <= radius; y++)
             {
-                for (int z = -radius; z < radius; z++)
+                for (int z = -radius; z <= radius; z++)
                 {
                     Vector3I coordinates = new Vector3I(x,y,z) + ViewerChunkCoordinates;
 

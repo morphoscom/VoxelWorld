@@ -26,8 +26,8 @@ public partial class ChunkGenerator : Resource
         {
             for(int z = 0; z < Chunk.SIZE; z++)
             {
-                int worldX = origin.X * x;
-                int worldZ = origin.Z * z;
+                int worldX = origin.X + x;
+                int worldZ = origin.Z + z;
 
                 float noiseValue = Noise.GetNoise2D(worldX,worldZ);
 
@@ -35,7 +35,7 @@ public partial class ChunkGenerator : Resource
 
                 for (int y = 0; y < Chunk.SIZE; y++)
                 {
-                    int worldY = origin.Y * y;
+                    int worldY = origin.Y + y;
 
                     VoxelType type = VoxelType.Air;
 
