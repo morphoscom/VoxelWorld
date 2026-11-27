@@ -5,6 +5,7 @@ public partial class WorldViewer : Node3D
 {
     [Export]
     public ChunkManager ChunkManager {get; set;} = null;
+
     private Vector3I _lastChunkCoordinates;
     private bool _hasLastChunkCoordinates = false;
     private Camera3D camera3D;
@@ -12,6 +13,8 @@ public partial class WorldViewer : Node3D
     public override void _Ready()
     {
         camera3D = GetViewport().GetCamera3D();
+        ArgumentNullException.ThrowIfNull(camera3D);
+
         if (ChunkManager == null)
         {
             GD.PushError("WorldViewer: ChunkManager is not assigned.");
@@ -46,6 +49,4 @@ public partial class WorldViewer : Node3D
         ChunkManager.UpdateViewerChunk(chunkCoordinates);
 
     }
-
-
 }
