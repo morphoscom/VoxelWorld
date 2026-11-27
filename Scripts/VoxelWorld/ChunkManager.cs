@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 public partial class ChunkManager : Node3D
 {
+    [Export]
+    public ChunkGenerator chunkGenerator {get;set;}
+
     [Export(PropertyHint.Range, "0,16,1")]
     public int LoadRadius {get;set;} = 2;
     public int LoadedChunkCount => _chunks.Count;
@@ -90,10 +93,20 @@ public partial class ChunkManager : Node3D
 
                     if (!_chunks.ContainsKey(coordinates))
                     {
-                        AddChunk(new Chunk(coordinates));
+                        //AddChunk(new Chunk(coordinates));
+
+                        Chunk chunk = new(coordinates);
+                        chunkGenerator.Generate(chunk);
+                        AddChunk(chunk);
                     }
                 } 
             }   
         }
     }
+
+    public override void _Ready()
+    {
+        ArgumentNullException.ThrowIfNull(chunkGenerator);
+    }
+
 }
