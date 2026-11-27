@@ -1,7 +1,13 @@
 [gd_scene format=3 uid="uid://4m6lcuds85qe"]
 
+[ext_resource type="Script" uid="uid://bv4e1fuycs0c1" path="res://Scripts/VoxelWorld/ChunkManager.cs" id="1_s1arf"]
+[ext_resource type="Script" uid="uid://bq73jkginf0yq" path="res://Scripts/VoxelWorld/WorldViewer.cs" id="2_4j848"]
+
 [node name="VoxelWorld" type="Node3D" unique_id=665516928]
 
 [node name="ChunkManager" type="Node3D" parent="." unique_id=1851244132]
+script = ExtResource("1_s1arf")
 
-[node name="WorldViewer" type="Node3D" parent="." unique_id=1413280477]
+[node name="WorldViewer" type="Node3D" parent="." unique_id=1413280477 node_paths=PackedStringArray("ChunkManager")]
+script = ExtResource("2_4j848")
+ChunkManager = NodePath("../ChunkManager")

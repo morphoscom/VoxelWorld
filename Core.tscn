@@ -1,9 +1,31 @@
 [gd_scene format=3 uid="uid://dl101f21axcy7"]
 
 [ext_resource type="PackedScene" uid="uid://4m6lcuds85qe" path="res://Scripts/VoxelWorld/VoxelWorld.tscn" id="1_vsfee"]
+[ext_resource type="Script" uid="uid://cmdpp7jp6pjpg" path="res://Camera3d.cs" id="2_58tws"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_vsfee"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_58tws"]
+sky_material = SubResource("ProceduralSkyMaterial_vsfee")
+
+[sub_resource type="Environment" id="Environment_10wf8"]
+background_mode = 2
+sky = SubResource("Sky_58tws")
+glow_enabled = true
 
 [node name="Core" type="Node3D" unique_id=592488910]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=752775844]
+environment = SubResource("Environment_10wf8")
 
 [node name="VoxelWorld" parent="." unique_id=665516928 instance=ExtResource("1_vsfee")]
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=196396831]
+current = true
+script = ExtResource("2_58tws")
+
+[node name="Label3D" type="Label3D" parent="." unique_id=740084402]
+pixel_size = 0.06
+text = "Start"
